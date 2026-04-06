@@ -8,113 +8,142 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-body {
+html, body {
   margin: 0;
   font-family: 'Cinzel', serif;
   color: gold;
   text-align: center;
-  background: black;
+
+  background: linear-gradient(
+    135deg,
+    #1a1a2e,   /* dark indigo */
+    #2b1d0e,   /* warm brown/gold tone */
+    #0a0a0f
+  );
 }
 
-/* IMAGE CONTAINER */
+/* CONTAINER */
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* IMAGE AREA */
 .game-area {
   position: relative;
-  width: 100%;
+  width: 90%;
   max-width: 900px;
   margin: auto;
 }
 
-.game-image {
-  width: 100%;
-  display: block;
-  border-bottom: 2px solid gold;
+/* BUTTON (BOTTOM RIGHT FLOATING) */
+.clue-btn {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+
+  all: unset;
+  color: gold;
+  cursor: pointer;
+  font-size: 14px;
+
+  background: rgba(0,0,0,0.5);
+  padding: 6px 10px;
+  border-radius: 5px;
+
+  display: none; /* hidden initially */
 }
 
-/* TITLE */
-.title {
-  margin-top: 20px;
-  text-shadow: 0 0 10px gold;
-}
-
-/* CODE INPUT BOX */
+/* INPUT SECTION */
 .code-box {
-  position: fixed;
-  bottom: 20px;
-  width: 100%;
-  text-align: center;
+  margin-top: 20px;
 }
 
-.code-box input {
-  padding: 12px;
+input {
+  padding: 10px;
   border: 2px solid gold;
   background: black;
   color: gold;
-  font-size: 16px;
 }
 
-.code-box button {
-  padding: 12px 20px;
+button.submit-btn {
+  padding: 10px 20px;
   border: 2px solid gold;
   background: black;
   color: gold;
   cursor: pointer;
-  margin-left: 10px;
 }
 
-.code-box button:hover {
+button.submit-btn:hover {
   background: gold;
   color: black;
 }
 
-/* ERROR */
 .error {
   color: red;
   margin-top: 10px;
 }
 
-/* CLUE SCREEN */
-.clue-container {
-  margin-top: 50px;
+/* POPUP */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+
+  justify-content: center;
+  align-items: center;
 }
 
-.clue-img {
-  animation: reveal 1.5s ease-in-out, glowPulse 2.5s infinite alternate;
-  display: block;
-  margin: 20px auto;
-  width: 500px;
+.popup-content {
+  background: black;
   border: 2px solid gold;
+  padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 0 30px gold;
+  box-shadow: 0 0 20px gold;
 }
 
-/* ANIMATION */
-@keyframes reveal {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
+
+
 </style>
 </head>
 
 <body>
 
-<h2 class="title">🔍 Find the Hidden Quidditch Objects</h2>
+<div class="container">
 
-<div class="game-area">
-  <img src="assets/images/bg2.jpg" class="game-image">
+  <h2>🔍 Find the Hidden Objects</h2>
+
+  <div class="game-area">
+    <!-- IMAGE -->
+    <img src="assets/images/bg2.jpg" style="width:100%; display:block;">
+
+    <!-- CLUE BUTTON -->
+    <button class="clue-btn" id="clueBtn" onclick="showCluePopup()">Get Clue</button>
+  </div>
+
+  <!-- INPUT -->
+  <div class="code-box">
+    <p>Enter the verification code:</p>
+    <input type="text" id="codeInput" placeholder="Enter code">
+    <button class="submit-btn" onclick="checkCode()">Submit</button>
+    <p id="error" class="error"></p>
+  </div>
+
 </div>
 
-<!-- INPUT -->
-<div class="code-box" id="codeSection">
-  <p>Enter the verification code:</p>
-  <input type="text" id="codeInput" placeholder="Enter code">
-  <button onclick="checkCode()">Submit</button>
-  <p id="error" class="error"></p>
+<!-- POPUP -->
+<div id="cluePopup" class="popup">
+  <div class="popup-content">
+    <h3>🔐 Hidden Clue</h3>
+    <p>The magical code is: <strong>12130</strong></p>
+    <button onclick="closeCluePopup()">Close</button>
+  </div>
 </div>
 
 <script>
@@ -125,6 +154,9 @@ if (!round || round < 2) {
   window.location.href = "index.html";
 }
 
+/* TRACK WRONG ATTEMPTS */
+let wrongAttempts = 0;
+
 /* CHECK CODE */
 function checkCode() {
   let code = document.getElementById("codeInput").value.trim();
@@ -132,7 +164,13 @@ function checkCode() {
   if (code === "12130") {
     showClue();
   } else {
+    wrongAttempts++;
     document.getElementById("error").innerText = "❌ Incorrect code. Try again!";
+
+    // SHOW CLUE BUTTON AFTER 1 WRONG ATTEMPT
+    if (wrongAttempts >= 1) {
+      document.getElementById("clueBtn").style.display = "block";
+    }
   }
 }
 
@@ -141,14 +179,33 @@ document.getElementById("codeInput").addEventListener("keypress", function(e) {
   if (e.key === "Enter") checkCode();
 });
 
-/* SHOW CLUE */
+/* POPUP CONTROL */
+function showCluePopup() {
+  document.getElementById("cluePopup").style.display = "flex";
+}
+
+function closeCluePopup() {
+  document.getElementById("cluePopup").style.display = "none";
+}
+
+/* CLOSE ON OUTSIDE CLICK */
+window.onclick = function(e) {
+  let popup = document.getElementById("cluePopup");
+  if (e.target === popup) {
+    popup.style.display = "none";
+  }
+}
+
+/* SHOW CLUE IMAGE */
 function showClue() {
   document.body.innerHTML = `
-    <h2>✨ Clue Unlocked ✨</h2>
-    <div class="clue-container">
-      <img src="assets/images/clue2.jpg" class="clue-img">
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; color:gold;">
+      <h2>✨ Clue Unlocked ✨</h2>
+      <img src="assets/images/clue2.jpg" style="width:250px; border:2px solid gold; box-shadow:0 0 20px gold;">
       <br><br>
-      <button onclick="nextRound()">Proceed to Next Round</button>
+      <button onclick="nextRound()" style="padding:10px 20px; border:2px solid gold; background:black; color:gold; cursor:pointer;">
+        Proceed
+      </button>
     </div>
   `;
 }
