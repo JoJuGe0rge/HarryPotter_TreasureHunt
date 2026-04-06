@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorting Ceremony</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Cinzel', serif;
+  background: radial-gradient(circle, #0a0a0f, #000);
+background-image: url('assets/images/bg1.jpg');
+  background-size: cover;
+  background-position: center;
+  color: gold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: -1;
+}
+
+.container {
+  max-width: 500px;
+  width: 90%;
+}
+
+h2 {
+  text-shadow: 0 0 10px gold;
+}
+
+.question {
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid gold;
+  border-radius: 10px;
+}
+
+label {
+  display: block;
+  margin: 8px 0;
+  cursor: pointer;
+}
+
+button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  border: 2px solid gold;
+  background: transparent;
+  color: gold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: gold;
+  color: black;
+  box-shadow: 0 0 20px gold;
+}
+
+.house {
+  font-size: 2.5rem;
+  margin: 20px 0;
+  text-shadow: 0 0 20px gold;
+  animation: glow 1s infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 10px gold; }
+  to { text-shadow: 0 0 30px gold; }
+}
+
+
+.clue-img {
+  animation: reveal 1.5s ease-in-out, glowPulse 2s infinite alternate;
+  display: block;
+  margin: 20px auto;
+  width: 500px;
+  border: 2px solid gold;
+  border-radius: 10px;
+  box-shadow: 0 0 30px gold;
+}
+
+@keyframes glowPulse {
+  from { box-shadow: 0 0 10px gold; }
+  to { box-shadow: 0 0 40px gold; }
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="container" id="app">
+  <h2>🧙 Sorting Ceremony</h2>
+
+  <div class="question">
+    <p>What defines you the most?</p>
+    <label><input type="radio" name="q1" value="gryffindor"> Courage</label>
+    <label><input type="radio" name="q1" value="ravenclaw"> Intelligence</label>
+    <label><input type="radio" name="q1" value="hufflepuff"> Loyalty</label>
+    <label><input type="radio" name="q1" value="slytherin"> Ambition</label>
+  </div>
+
+  <div class="question">
+    <p>In a difficult situation, you would...</p>
+    <label><input type="radio" name="q2" value="gryffindor"> Face it head-on</label>
+    <label><input type="radio" name="q2" value="ravenclaw"> Think smartly</label>
+    <label><input type="radio" name="q2" value="hufflepuff"> Help others</label>
+    <label><input type="radio" name="q2" value="slytherin"> Find a way to win</label>
+  </div>
+
+  <div class="question">
+    <p>Your ideal environment is...</p>
+    <label><input type="radio" name="q3" value="gryffindor"> Adventure</label>
+    <label><input type="radio" name="q3" value="ravenclaw"> Learning</label>
+    <label><input type="radio" name="q3" value="hufflepuff"> Peace</label>
+    <label><input type="radio" name="q3" value="slytherin"> Power</label>
+  </div>
+
+  <button onclick="submitQuiz()">Reveal My House</button>
+</div>
+
+<script>
+function submitQuiz() {
+  let scores = {
+    gryffindor: 0,
+    ravenclaw: 0,
+    hufflepuff: 0,
+    slytherin: 0
+  };
+
+  for (let i = 1; i <= 3; i++) {
+    let selected = document.querySelector(`input[name="q${i}"]:checked`);
+    if (!selected) {
+      alert("Please answer all questions!");
+      return;
+    }
+    scores[selected.value]++;
+  }
+
+  let house = Object.keys(scores).reduce((a, b) =>
+    scores[a] > scores[b] ? a : b
+  );
+
+  showResult(house);
+}
+
+function showResult(house) {
+  const houses = {
+    gryffindor: "🦁 Gryffindor",
+    ravenclaw: "🦅 Ravenclaw",
+    hufflepuff: "🦡 Hufflepuff",
+    slytherin: "🐍 Slytherin"
+  };
+
+  document.getElementById("app").innerHTML = `
+    <h2>The Sorting Hat has decided...</h2>
+    <div class="house">${houses[house]}</div>
+    <button onclick="goNext()">Continue</button>
+  `;
+
+  localStorage.setItem("house", house);
+}
+
+function goToNextRound() {
+  localStorage.setItem("round", 2);
+  window.location.href = "round2.html";
+}
+
+function goNext() {
+  document.getElementById("app").innerHTML = `
+    <h2>✨ Clue Unlocked ✨</h2>
+    <img src="assets/images/clue1.jpg" class="clue-img">
+    <br><br>
+    <button onclick="goToNextRound()">Proceed to Next Round</button>
+  `;
+}
+</script>
+
+</body>
+</html>

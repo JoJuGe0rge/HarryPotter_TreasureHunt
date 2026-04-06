@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Round 2 - Object Hunt</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Cinzel', serif;
+  color: gold;
+  text-align: center;
+  background: black;
+}
+
+/* IMAGE CONTAINER */
+.game-area {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+}
+
+.game-image {
+  width: 100%;
+  display: block;
+  border-bottom: 2px solid gold;
+}
+
+/* TITLE */
+.title {
+  margin-top: 20px;
+  text-shadow: 0 0 10px gold;
+}
+
+/* CODE INPUT BOX */
+.code-box {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.code-box input {
+  padding: 12px;
+  border: 2px solid gold;
+  background: black;
+  color: gold;
+  font-size: 16px;
+}
+
+.code-box button {
+  padding: 12px 20px;
+  border: 2px solid gold;
+  background: black;
+  color: gold;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.code-box button:hover {
+  background: gold;
+  color: black;
+}
+
+/* ERROR */
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+/* CLUE SCREEN */
+.clue-container {
+  margin-top: 50px;
+}
+
+.clue-img {
+  width: 250px;
+  border: 2px solid gold;
+  border-radius: 10px;
+  box-shadow: 0 0 30px gold;
+  animation: reveal 1.5s ease-in-out;
+}
+
+/* ANIMATION */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<h2 class="title">🔍 Find the Hidden Quidditch Objects</h2>
+
+<div class="game-area">
+  <img src="assets/images/bg2.jpg" class="game-image">
+</div>
+
+<!-- INPUT -->
+<div class="code-box" id="codeSection">
+  <p>Enter the verification code:</p>
+  <input type="text" id="codeInput" placeholder="Enter code">
+  <button onclick="checkCode()">Submit</button>
+  <p id="error" class="error"></p>
+</div>
+
+<script>
+
+/* PREVENT SKIPPING */
+let round = localStorage.getItem("round");
+if (!round || round < 2) {
+  window.location.href = "index.html";
+}
+
+/* CHECK CODE */
+function checkCode() {
+  let code = document.getElementById("codeInput").value.trim();
+
+  if (code === "12130") {
+    showClue();
+  } else {
+    document.getElementById("error").innerText = "❌ Incorrect code. Try again!";
+  }
+}
+
+/* ENTER KEY SUPPORT */
+document.getElementById("codeInput").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") checkCode();
+});
+
+/* SHOW CLUE */
+function showClue() {
+  document.body.innerHTML = `
+    <h2>✨ Clue Unlocked ✨</h2>
+    <div class="clue-container">
+      <img src="assets/images/clue2.jpg" class="clue-img">
+      <br><br>
+      <button onclick="nextRound()">Proceed to Next Round</button>
+    </div>
+  `;
+}
+
+/* NEXT ROUND */
+function nextRound() {
+  localStorage.setItem("round", 3);
+  window.location.href = "round3.html";
+}
+
+</script>
+
+</body>
+</html>

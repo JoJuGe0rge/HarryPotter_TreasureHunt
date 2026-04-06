@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Round 3 - Spell Recognition</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Cinzel', serif;
+  color: gold;
+  text-align: center;
+background: url('assets/images/bg3.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* OVERLAY */
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* CONTAINER */
+.container {
+  position: relative;
+  z-index: 1;
+  margin-top: 60px;
+}
+
+/* TITLE */
+h2 {
+  text-shadow: 0 0 10px gold;
+}
+
+/* QUESTION */
+.question {
+  font-size: 20px;
+  margin: 20px;
+}
+
+/* INPUT */
+input {
+  padding: 12px;
+  border: 2px solid gold;
+  background: black;
+  color: gold;
+  font-size: 16px;
+}
+
+/* BUTTON */
+button {
+  padding: 12px 20px;
+  border: 2px solid gold;
+  background: black;
+  color: gold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background: gold;
+  color: black;
+}
+
+/* STATUS */
+.status {
+  margin-top: 15px;
+  font-size: 18px;
+}
+
+/* CLUE */
+.clue-img {
+  width: 250px;
+  border: 2px solid gold;
+  border-radius: 10px;
+  box-shadow: 0 0 30px gold;
+  margin-top: 20px;
+  animation: reveal 1.5s ease-in-out;
+}
+
+/* ANIMATIONS */
+@keyframes zoomBg {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+<div class="overlay"></div>
+
+<div class="container" id="app">
+  <h2>🧠 Spell Recognition</h2>
+
+  <p class="question" id="questionText"></p>
+
+  <input type="text" id="answerInput" placeholder="Enter spell name">
+  <br>
+  <button onclick="checkAnswer()">Submit</button>
+
+  <div class="status" id="status"></div>
+  <div class="status" id="progress"></div>
+</div>
+
+<script>
+
+/* PREVENT SKIPPING */
+let round = localStorage.getItem("round");
+if (!round || round < 3) {
+  window.location.href = "index.html";
+}
+
+/* QUESTIONS */
+const questions = [
+  { q: "Light up your wand", a: "lumos" },
+  { q: "Disarm your opponent", a: "expelliarmus" },
+  { q: "Unlock a door", a: "alohomora" },
+  { q: "Levitate objects", a: "wingardium leviosa" },
+  { q: "Turn off light", a: "nox" }
+];
+
+let current = 0;
+let correct = 0;
+
+function loadQuestion() {
+  document.getElementById("questionText").innerText = questions[current].q;
+  document.getElementById("progress").innerText = 
+    `Correct: ${correct} / 3`;
+}
+
+loadQuestion();
+
+/* CHECK ANSWER */
+function checkAnswer() {
+  let input = document.getElementById("answerInput").value
+    .toLowerCase()
+    .trim();
+
+  let correctAnswer = questions[current].a;
+
+  if (input.includes(correctAnswer)) {
+    correct++;
+    document.getElementById("status").innerText = "✅ Correct!";
+  } else {
+    document.getElementById("status").innerText = "❌ Wrong spell!";
+  }
+
+  document.getElementById("answerInput").value = "";
+
+  current++;
+
+  if (correct >= 3) {
+    setTimeout(showClue, 800);
+  } else if (current < questions.length) {
+    setTimeout(loadQuestion, 800);
+  } else {
+    document.getElementById("status").innerText = 
+      "❌ Not enough correct answers. Refresh to try again!";
+  }
+}
+
+/* ENTER KEY SUPPORT */
+document.getElementById("answerInput").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") checkAnswer();
+});
+
+/* SHOW CLUE */
+function showClue() {
+  document.body.innerHTML = `
+    <h2>✨ Clue Unlocked ✨</h2>
+    <img src="assets/images/clue3.jpg" class="clue-img">
+    <br><br>
+    <button onclick="nextRound()">Proceed</button>
+  `;
+}
+
+/* NEXT ROUND */
+function nextRound() {
+  localStorage.setItem("round", 4);
+  window.location.href = "round4.html";
+}
+
+</script>
+
+</body>
+</html>

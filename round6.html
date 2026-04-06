@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Treasure</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Cinzel', serif;
+  color: gold;
+  text-align: center;
+
+  background:
+    url('assets/images/bg6.jpg') no-repeat center center;
+background-attachment: fixed;
+  background-size: cover;
+}
+
+/* CONTAINER */
+.container {
+  margin-top: 80px;
+}
+
+/* TITLE */
+h1 {
+  font-size: 40px;
+  text-shadow: 0 0 20px gold;
+  animation: glow 2s infinite alternate;
+}
+
+/* MESSAGE */
+.message {
+  font-size: 22px;
+  margin-top: 20px;
+}
+
+/* CLUE BOARD */
+.clues {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.clues img {
+  width: 120px;
+  margin: 10px;
+  border: 2px solid gold;
+  box-shadow: 0 0 15px gold;
+}
+
+/* BUTTON */
+button {
+  margin-top: 30px;
+  padding: 12px 25px;
+  border: 2px solid gold;
+  background: black;
+  color: gold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: gold;
+  color: black;
+}
+
+/* ANIMATION */
+@keyframes glow {
+  from { text-shadow: 0 0 10px gold; }
+  to { text-shadow: 0 0 30px gold; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>🎉 Congratulations! 🎉</h1>
+
+  <p class="message">You have completed the Hogwarts Treasure Hunt!</p>
+
+  <p class="message"><strong>🧙 You're a wizard, Kunja !</strong></p>
+
+  <!-- OPTIONAL CLUE BOARD -->
+  <div class="clues">
+    <img src="assets/images/clue1.jpg">
+    <img src="assets/images/clue2.jpg">
+    <img src="assets/images/clue3.jpg">
+    <img src="assets/images/clue4.jpg">
+    <img src="assets/images/clue5.jpg">
+    <img src="assets/images/clue6.jpg">
+  </div>
+
+  <button onclick="restartGame()">Play Again</button>
+
+</div>
+
+<script>
+
+/* PREVENT SKIPPING */
+let round = localStorage.getItem("round");
+if (!round || round < 6) {
+  window.location.href = "index.html";
+}
+
+/* RESTART */
+function restartGame() {
+  localStorage.clear();
+  window.location.href = "index.html";
+}
+
+</script>
+
+</body>
+</html>

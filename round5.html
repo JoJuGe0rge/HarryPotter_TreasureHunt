@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Round 5 - Wizard Roleplay</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Cinzel', serif;
+  color: gold;
+  text-align: center;
+
+  background:
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+    url('assets/images/bg5.jpg') no-repeat center center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+/* CONTAINER */
+.container {
+  margin-top: 60px;
+  padding: 20px;
+}
+
+/* BOX */
+.card {
+  border: 2px solid gold;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+  background: rgba(0,0,0,0.6);
+}
+
+/* BUTTON */
+button {
+  padding: 12px 25px;
+  border: 2px solid gold;
+  background: black;
+  color: gold;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button:hover {
+  background: gold;
+  color: black;
+}
+
+/* LOADING BAR */
+.progress-bar {
+  width: 80%;
+  height: 20px;
+  border: 2px solid gold;
+  margin: 20px auto;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  width: 0%;
+  background: gold;
+}
+
+/* CLUE */
+.clue-img {
+  width: 250px;
+  border: 2px solid gold;
+  border-radius: 10px;
+  box-shadow: 0 0 30px gold;
+  margin-top: 20px;
+  animation: reveal 1.5s ease-in-out;
+}
+
+/* ANIMATION */
+@keyframes reveal {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="app">
+  <h2>🎭 Wizard Roleplay Challenge</h2>
+
+  <div class="card">
+    <p>
+      Record a video of yourself as a wizard using household items:
+    </p>
+
+    <ul style="text-align:left">
+      <li>🍳 Tawa as a hat</li>
+      <li>🥄 Spoon as a wand</li>
+      <li>🧣 Bedsheet as a robe</li>
+    </ul>
+
+    <p>Perform a spell dramatically!</p>
+
+    <button onclick="startUpload()">Upload Your Wizard Video</button>
+  </div>
+</div>
+
+<script>
+
+/* PREVENT SKIPPING */
+let round = localStorage.getItem("round");
+if (!round || round < 5) {
+  window.location.href = "index.html";
+}
+
+/* START UPLOAD */
+function startUpload() {
+  document.getElementById("app").innerHTML = `
+    <h2>🔮 Uploading...</h2>
+    <div class="progress-bar">
+      <div class="progress" id="progress"></div>
+    </div>
+    <p id="status">Analyzing spell accuracy...</p>
+  `;
+
+  simulateUpload();
+}
+
+/* SIMULATION */
+function simulateUpload() {
+  let progress = 0;
+  let bar = document.getElementById("progress");
+  let status = document.getElementById("status");
+
+  let messages = [
+    "Analyzing spell accuracy...",
+    "Checking magical aura...",
+    "Verifying wizard credentials..."
+  ];
+
+  let i = 0;
+
+  let interval = setInterval(() => {
+    progress += 5;
+    bar.style.width = progress + "%";
+
+    if (progress % 30 === 0 && i < messages.length) {
+      status.innerText = messages[i];
+      i++;
+    }
+
+    if (progress >= 100) {
+      clearInterval(interval);
+      showSuccess();
+    }
+  }, 150);
+}
+
+/* SUCCESS */
+function showSuccess() {
+  document.body.innerHTML = `
+    <h2>✨ Upload Successful ✨</h2>
+    <p>You are a certified wizard! 🧙</p>
+    <img src="assets/images/clue5.jpg" class="clue-img">
+    <br><br>
+    <button onclick="nextRound()">Proceed</button>
+  `;
+}
+
+/* NEXT ROUND */
+function nextRound() {
+  localStorage.setItem("round", 6);
+  window.location.href = "round6.html";
+}
+
+</script>
+
+</body>
+</html>
